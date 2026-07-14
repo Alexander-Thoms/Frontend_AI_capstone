@@ -128,6 +128,13 @@
     </main>
     
     <script>
+        function getAuthHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + btoa('admin:admin123')
+            };
+        }
+
         const form = document.getElementById('settingsForm');
         const submitBtn = document.getElementById('submitBtn');
         const submitText = document.getElementById('submitText');
@@ -157,9 +164,7 @@
             try {
                 const response = await fetch('/submit-settings', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify(formData)
                 });
                 
@@ -242,9 +247,12 @@
             loadingText.classList.toggle('hidden', !isLoading);
         }
         
-        async function loadSubmittedData() {
+                async function loadSubmittedData() {
             try {
-                const response = await fetch('/settings-data');
+                const response = await fetch('/settings-data', {
+                    method: 'GET',
+                    headers: getAuthHeaders()
+                });
                 if (response.ok) {
                     const data = await response.json();
                     
